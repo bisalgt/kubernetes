@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: minimal-ingress
+  namespace: django-namespace
+spec:
+  rules:
+  - host: minikube-bisalgt.info
+    http:
+      paths:
+        - pathType: Prefix
+          path: "/"
+          backend:
+            service:
+              name: django-clusterip-service
+              port: 
+                number: 8000
