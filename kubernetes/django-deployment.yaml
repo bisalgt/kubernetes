@@ -22,6 +22,14 @@ spec:
         image: bisalgt/django:v2
         ports:
         - containerPort: 8000
+        volumeMounts:
+        - mountPath: /home
+          name: myvolume
+      volumes:
+      - name: myvolume
+        hostPath:
+          path: /home
+          type: DirectoryOrCreate
 
 ---
 # apiVersion: v1
