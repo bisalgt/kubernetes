@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: django-deployment
+  namespace: final-cluster
+  labels:
+    app: django-deployment-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: django-app
+      type: deployment
+  template:
+    metadata:
+      labels:
+        app: django-app
+        type: deployment
+    spec:
+      containers:
+      - name: django
+        imagePullPolicy: Always
+        # stdin: true
+        # tty: true
+        image: bisalgt/django:v3
+        ports:
+        - containerPort: 8000
+        volumeMounts:
+        - mountPath: /usr/src/app/staticfiles
+          name: my-volume
+      #   # resources:
+      #   #   limits:
+      #   #     memory: 3Gi
+      #   #     cpu: "2"
+      volumes:
+      - name: my-volume
+        persistentVolumeClaim:
+          claimName: my-pvc
+
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: django-clusterip-service
+  namespace: final-cluster
+spec:
+  selector:
+    app: django-app
+    type: deployment
+  ports: 
+    - port: 8000
+      targetPort: 8000
