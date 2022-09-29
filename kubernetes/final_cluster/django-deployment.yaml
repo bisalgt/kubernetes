@@ -22,7 +22,7 @@ spec:
         imagePullPolicy: Always
         # stdin: true
         # tty: true
-        image: bisalgt/django:v3
+        image: bisalgt/django:v4
         ports:
         - containerPort: 8000
         volumeMounts:

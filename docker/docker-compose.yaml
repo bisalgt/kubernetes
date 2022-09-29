@@ -2,7 +2,7 @@ version: '3.3'
 
 services:
   django-web:
-    image: bisalgt/django:v3
+    image: bisalgt/django:v4
     build:
       context: ../.
       dockerfile: ./docker/django/Dockerfile
