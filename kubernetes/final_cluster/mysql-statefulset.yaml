@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mysql-set
+  namespace: final-cluster
+spec:
+  selector:
+    matchLabels:
+      app: mysql
+  serviceName: "mysql"
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+      - name: mysql
+        image: mysql:5.7
+        ports:
+        - containerPort: 3306
+        volumeMounts:
+        - name: mysql-store
+          mountPath: /var/lib/mysql
+        env:
+          - name: MYSQL_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mysql-password
+                key: MYSQL_ROOT_PASSWORD
+  volumeClaimTemplates:
+  - metadata:
+      name: mysql-store
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      storageClassName: "my-storage-class"
+      resources:
+        requests:
+          storage: 1Gi
+
+
+---
+# apiVersion: apps/v1
+# kind: StatefulSet
+# metadata:
+#   name: mystatefulset
+# spec:
+#   selector:
+#     matchLabels:
+#       app: myapp
+#   serviceName: <ServiceName>
+#   replicas: 2
+#   template:
+#     metadata:
+#       labels:
+#         app: myapp
+#     spec:
+#       containers:
+#       - name: myapp
+#         image: k8s.gcr.io/nginx-slim:0.8
+#         ports:
+#         - containerPort: 80
+#           name: web
+#         volumeMounts:
+#         - name: www
+#           mountPath: /usr/share/nginx/html
+#   volumeClaimTemplates:
+#   - metadata:
+#       name: www
+#     spec:
+#       accessModes: [ "ReadWriteOnce" ]
+#       resources:
+#         requests:
+#           storage: 1Gi
